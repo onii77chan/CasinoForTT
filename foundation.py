@@ -18,18 +18,23 @@ def log_called_method(func):
 
 def input_data(prompt):
     """
-    :param prompt: str
-    :return: int
+    :param prompt: [str] or str
+    :return: str
     """
+    results = []
     while True:
         try:
-            data = int(input(f"\n{separate_text}\n{prompt}"))
-            return data
+            data = input(f"\n{separate_text}\n"
+                         f"{prompt[0]}: ")
+            results.append(data)
+            del prompt[0]
+
+        except IndexError:
+            return results
         except ValueError:
             print(f"{separate_text}\n"
-                  "Please enter an integer."
+                  "Oops whats wrong! Try again."
                   "\n")
-
 
 
 class Game:
@@ -44,36 +49,29 @@ class Game:
         'A♣': 11
 }
 
-    def __init__(self):
-        pass
+    def __init__(self, round):
+        self.round = round
+
+    def next_round(self):
+        self.round += 1
 
 
 class Person:
-    def __init__(self, name="bot", person_cash=0, person_cards=None):
-        self.name = name
+    def __init__(self, person_name="bot", person_cash=0, person_cards=None):
+        self.person_name = person_name
         self.person_cards = person_cards if person_cards is not None else {}
         self.person_cash = person_cash
 
     def __str__(self):
-        return f"Person(name={self.name}, person_cards={self.person_cards})"
+        return f"Person(person_name={self.person_name}, person_cash={self.person_cash} person_cards={self.person_cards})"
 
     @log_called_method
-    def create_person(self, constructor):
-        prompts = ["your_name: ", "your_cash: ",]
-        results = []
-        prompt_num = 0
+    def create_person(self):
+        data = ["new_person_name", "new_person_cash"]
 
-        while True:
-            try:
-                results.append(input_data(prompts[prompt_num]))
-            except IndexError:
-                pass
-            if len(results) == 2:
-                person = constructor(name=results[0], person_cash=results[1])
-                return person
-            prompt_num += 1
+        get_params = input_data(data)
+        params = [get_params[0], get_params[1]]
 
+        newperson = Person(person_name=params[0], person_cash=params[1])
 
-constructor = Person
-
-test = constructor().create_person(constructor)
+        return newperson

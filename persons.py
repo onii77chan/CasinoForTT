@@ -15,4 +15,3 @@ persons_list - for storing persons
 """
 persons_list = []
 
-l = constructor().create_person()
